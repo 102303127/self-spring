@@ -7,17 +7,17 @@
 
 ### 1.加载并注册BeanDefinitions
 
-![加载并注册BeanDefinitions时序图](加载并注册BeanDefinitions时序图.png)
+![加载并注册BeanDefinitions时序图](spring模块/png/加载并注册BeanDefinitions时序图.png)
 
 ### 2.Spring中预先加载单例Bean(包括getBean())
 
-![img.png](getBean().png)
+![img.png](spring模块/png/getBean().png)
 
 ## Aop模块
 
 Aop代理注册流程
 
-![img.png](Aop创建代理流程时序图.png)
+![img.png](spring模块/png/Aop创建代理流程时序图.png)
 
 ## Jdbc模块
 
@@ -49,7 +49,7 @@ JdbcOperation主要是通过JDBC操作数据库的基本操作方法。
 
   子容器可以获取到父容器中的对象，Controller里面可以注入Service层级的对象。
 
-![img.png](img.png)
+![img.png](spring模块/png/img.png)
 
   在对容器初始化中会初始化其中的Bean,其中初始化**WebMvcConfigurationSupport**时会对其中定义的**HandlerMapping**，**HandlerAdapter**等容器Bean进行初始化
 
@@ -80,11 +80,10 @@ spring在启动的时候会初始化AbstractHandlerMethodMapping类，他实现�
 对HandlerMapping初始化结束之后调用**afterPropertiesSet**()进行对方法中的路径进行解析存储**MappingRegistry**中。
 
 
-### 3.子容器实现初始化
 
-### 处理请求
+### 3.处理请求
 
-![img_2.png](img_2.png)
+![img_2.png](spring模块/png/img_2.png)
 
 
 
