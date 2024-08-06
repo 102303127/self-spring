@@ -79,7 +79,6 @@ spring在启动的时候会初始化AbstractHandlerMethodMapping类，他实现�
 
 对HandlerMapping初始化结束之后调用**afterPropertiesSet**()进行对方法中的路径进行解析存储**MappingRegistry**中。
 
-![img_1.png](img_1.png)
 
 ### 3.子容器实现初始化
 
