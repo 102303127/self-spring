@@ -1,7 +1,6 @@
 # 手写Spring源码项目介绍
 
 该项目用于自我学习过程中的实践
-[各类解释](src%2Fmain%2Fjava%2Fcom%2Fzhang%2Ftr.txt)
 
 ## Ioc模块
 
