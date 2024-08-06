@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       ">
+
+    <!-- Bean定义 -->
+    <bean id="animal" class="com.zhang.beans.Animal">
+        <!-- 设置属性 -->
+        <property name="age" value= "1" />
+        <property name="clothes" ref= "clothes" />
+    </bean>
+
+    <bean id = "clothes" class="com.zhang.beans.Clothes">
+        <property name="color" value="red"/>
+    </bean>
+
+</beans>
