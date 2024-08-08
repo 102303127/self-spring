@@ -2,6 +2,20 @@
 
 该项目用于自我学习过程中的实践
 
+- 飞书文档：https://zquk8ow8fg6.feishu.cn/wiki/ActQw0AK7iPvvvkPkhlcpCIjnRh?from=from_copylink
+
+其中分为spring模块和springmvc模块
+
+spring模块只实现了xml注册Bean的部分
+
+springmvc模块依赖于org.springframework中的spring的ioc和web模块
+
+- xml依赖于XmlBeanDefinitionReader实现注册Bean
+
+- 注解主要依赖于ClassPathBeanDefinitionScanner实现扫描注册Bean
+
+
+
 ## Ioc模块
 
 ### 1.加载并注册BeanDefinitions
@@ -11,6 +25,22 @@
 ### 2.Spring中预先加载单例Bean(包括getBean())
 
 ![img.png](spring模块/png/getBean().png)
+
+
+
+
+在对Bean的属性填充populateBean()
+循环依赖的解决：三级缓存
+在DefaultSingletonBeanRegistry设置有三个map用于实现三级缓存，解决循环依赖问题
+- singletonObjects         第一级缓存，用于保存实例化、注入、初始化完成的bean实例
+- earlySingletonObjects  第二级缓存，存放原始的 bean 对象（尚未填充属性），用于解决循环依赖
+- singletonFactories       第三级缓存，用于保存bean创建工厂，以便于后面扩展有机会创建代理对象。
+其中第三级缓存中添加ObjectFactory对象，对象可能需要经过Aop，通过getEarlyBeanReference方法获取代理对象
+如果不实现Aop功能，二级缓存是足够解决循环依赖的
+
+
+
+
 
 ## Aop模块
 
@@ -38,7 +68,7 @@ JdbcOperation主要是通过JDBC操作数据库的基本操作方法。
 
 该模块要依赖于org.springframework中的spring的ioc和web模块
 
-
+![img.png](springmvc主要组件关系图.png)
 
 ### 1.初始化父子容器
 
