@@ -2,6 +2,8 @@
 
 该项目用于自我学习过程中的实践
 
+[spring项目结构](spring模块/src/main/tr.txt)
+
 - 飞书文档：https://zquk8ow8fg6.feishu.cn/wiki/ActQw0AK7iPvvvkPkhlcpCIjnRh?from=from_copylink
 
 其中分为spring模块和springmvc模块
