@@ -116,7 +116,6 @@ JdbcOperation主要是通过JDBC操作数据库的基本操作方法。
 
   子容器可以获取到父容器中的对象，Controller里面可以注入Service层级的对象。
 
-![img.png](spring模块/png/img.png)
 
   在对容器初始化中会初始化其中的Bean,其中初始化**WebMvcConfigurationSupport**时会对其中定义的**HandlerMapping**，**HandlerAdapter**等容器Bean进行初始化
 
