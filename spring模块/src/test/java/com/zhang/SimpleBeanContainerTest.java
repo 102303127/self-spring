@@ -17,7 +17,7 @@ import java.lang.reflect.InvocationTargetException;
 public class SimpleBeanContainerTest {
 
     @Test
-    public void testGetBean() throws BeansException, InvocationTargetException, IllegalAccessException {
+    public void testGetBean() throws BeansException, Exception {
         DefaultListableBeanFactory beanFactory = new DefaultListableBeanFactory();
         BeanDefinition beanDefinition = new RootBeanDefinition(Animal.class);
         beanFactory.registerBeanDefinition("animal", beanDefinition);

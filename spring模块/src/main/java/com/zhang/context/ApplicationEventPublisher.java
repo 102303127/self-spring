@@ -1,5 +1,7 @@
 package com.zhang.context;
 
+import com.zhang.beans.BeansException;
+
 /**
  * @author zhang
  * @date 2024/7/8
@@ -15,5 +17,5 @@ public interface ApplicationEventPublisher {
      * 这里简化实现,只对ApplicationEvent实现
      * @param event
      */
-    void publishEvent(ApplicationEvent event);
+    void publishEvent(ApplicationEvent event) throws BeansException;
 }

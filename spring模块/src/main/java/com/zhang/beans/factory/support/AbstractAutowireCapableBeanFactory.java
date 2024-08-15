@@ -6,6 +6,7 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.TypeUtil;
 import com.zhang.beans.BeansException;
 import com.zhang.beans.PropertyValue;
+import com.zhang.beans.PropertyValues;
 import com.zhang.beans.factory.Aware;
 import com.zhang.beans.factory.BeanFactoryAware;
 import com.zhang.beans.factory.BeanNameAware;
@@ -37,7 +38,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     private InstantiationStrategy instantiationStrategy = new SimpleInstantiationStrategy();
 
     @Override
-    protected Object createBean(String beanName, RootBeanDefinition beanDefinition) throws BeansException, InvocationTargetException, IllegalAccessException {
+    protected Object createBean(String beanName, RootBeanDefinition beanDefinition) throws BeansException, Exception {
         // Give BeanPostProcessors a chance to return a proxy instead of the target bean instance.
         // 这一步在Aop中直接返回null，Aop实现在实例化并填充属性之后
         Object bean = resolveBeforeInstantiation(beanName, beanDefinition);
@@ -86,7 +87,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 
 
 
-    protected Object doCreateBean(String beanName, RootBeanDefinition beanDefinition) throws BeansException, InvocationTargetException, IllegalAccessException {
+    protected Object doCreateBean(String beanName, RootBeanDefinition beanDefinition) throws BeansException, Exception {
         Object bean = createBeanInstance(beanDefinition);
 
         //为解决循环依赖问题，将实例化后的bean放进三级缓存中
@@ -102,8 +103,14 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
             });
         }
 
+
         // 填充属性值
         populateBean(beanName, beanDefinition, bean);
+
+
+        // TODO 注册有销毁方法的bean(待实现)
+        // registerDisposableBeanIfNecessary(beanName, bean, beanDefinition);
+
 
         // 初始化 bean 对象
         bean = initializeBean(beanName, bean, beanDefinition);
@@ -250,6 +257,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
 
+
+
+
     protected Object createBeanInstance(RootBeanDefinition beanDefinition) throws BeansException {
         return instantiationStrategy.instantiate(beanDefinition);
     }
@@ -261,20 +271,34 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
      * @param bean
      * @throws BeansException
      */
-    protected void populateBean(String beanName, RootBeanDefinition mbd, Object bean) throws BeansException {
+    protected void populateBean(String beanName, RootBeanDefinition mbd, Object bean) throws BeansException, Exception {
 
-        applyPropertyValues(beanName, bean, mbd);
+        // 在设置bean属性之前，允许BeanPostProcessor修改属性值
+        for (BeanPostProcessor beanPostProcessor : getBeanPostProcessors()) {
+            if (beanPostProcessor instanceof InstantiationAwareBeanPostProcessor) {
+                PropertyValues pvs = ((InstantiationAwareBeanPostProcessor) beanPostProcessor).postProcessPropertyValues(mbd.getPropertyValues(), bean, beanName);
+                if (pvs != null) {
+                    for (PropertyValue propertyValue : pvs.getPropertyValues()) {
+                        mbd.getPropertyValues().addPropertyValue(propertyValue);
+                    }
+                }
+            }
+        }
+
+        PropertyValues pvs = mbd.getPropertyValues();
+
+        applyPropertyValues(beanName, bean, pvs);
     }
+
+
 
     /**
      * 为bean填充属性,设置Bean的属性值
      *
-     * @param bean
-     * @param beanDefinition
      */
-    protected void applyPropertyValues(String beanName, Object bean, BeanDefinition beanDefinition) throws BeansException {
+    protected void applyPropertyValues(String beanName, Object bean, PropertyValues pvs) throws BeansException {
         try {
-            for (PropertyValue propertyValue : beanDefinition.getPropertyValues().getPropertyValues()) {
+            for (PropertyValue propertyValue : pvs.getPropertyValues()) {
                 String name = propertyValue.getName();
                 Object value = propertyValue.getValue();
                 // 如果是bean引用，则先实例化

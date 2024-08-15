@@ -33,7 +33,7 @@ public interface BeanFactory {
      * @param <T>requiredType – Bean 必须匹配的类型;可以是接口或超类
      * @return Bean实例
      */
-    <T> T getBean(Class<T> requiredType) throws BeansException, InvocationTargetException, IllegalAccessException;
+    <T> T getBean(Class<T> requiredType) throws BeansException, Exception;
 
     /**
      * 此 Bean 工厂是否包含具有给定名称的 Bean 定义或外部注册的单例实例

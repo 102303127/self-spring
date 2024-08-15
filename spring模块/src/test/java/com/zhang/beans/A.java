@@ -1,9 +1,6 @@
 package com.zhang.beans;
 
-/**
- * @author derekyi
- * @date 2021/1/25
- */
+
 public class A {
 
 	private B b;

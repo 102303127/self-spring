@@ -1,0 +1,33 @@
+├─context
+│  │  ApplicationContext.java                                 ## 主容器接口
+│  │  ApplicationContextAware.java                            ## 注入ApplicationContext容器
+│  │  ApplicationEvent.java                                   ## Application事件定义接口
+│  │  ApplicationEventPublisher.java                          ## 时间发布接口
+│  │  ApplicationListener.java
+│  │  ConfigurableApplicationContext.java
+│  │
+│  ├─annotation
+│  │      Bean.java                                           ## （未实现）
+│  │      ClassPathBeanDefinitionScanner.java
+│  │      ClassPathScanningCandidateComponentProvider.java    ## package-scan的支持类
+│  │      ComponentScan.java                                  ## （未实现）
+│  │      ComponentScans.java                                 ## （未实现）
+│  │      Lazy.java                                           ## （未实现）
+│  │      Scope.java                                          ## （未实现）
+│  ├─event
+│  │      AbstractApplicationEventMulticaster.java            ## 提供基本的侦听器注册工具。
+│  │      ApplicationContextEvent.java
+│  │      ApplicationEventMulticaster.java                    ## 事件多播接口
+│  │      ContextClosedEvent.java                             ## 容器自带的容器关闭事件
+│  │      ContextRefreshedEvent.java                          ## 容器自带的容器刷新事件
+│  │      ContextStartedEvent.java                            ## 容器自带的容器开始事件
+│  │      ContextStoppedEvent.java                            ## 容器自带的容器停止事件
+│  │      SimpleApplicationEventMulticaster.java              ## 将所有事件多播到所有已注册的侦听器
+│  │
+│  └─support
+│          AbstractApplicationContext.java                          ## Context核心实现
+│          AbstractRefreshableApplicationContext.java               ## 实现刷新容器，创建beanFactory并加载BeanDefinition
+│          AbstractRefreshableConfigApplicationContext.java
+│          AbstractXmlApplicationContext.java                       ## 实现调用加载BeanDefinition的方法
+│          ApplicationContextAwareProcessor.java                    ## 实现Aware，注入ApplicationContext
+│          ClassPathXmlApplicationContext.java                      ## 加载xml文件

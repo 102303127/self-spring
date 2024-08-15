@@ -46,7 +46,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry
      * @return
      */
     @Override
-    public Object getBean(String name) throws BeansException, InvocationTargetException, IllegalAccessException {
+    public Object getBean(String name) throws BeansException, Exception {
         Object sharedInstance = getSingleton(name);
         if (sharedInstance != null) {
             //如果是FactoryBean，从FactoryBean#getObject中创建bean
@@ -60,7 +60,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry
 
     protected abstract BeanDefinition getBeanDefinition(String name) throws BeansException;
 
-    protected abstract Object createBean(String name, RootBeanDefinition beanDefinition) throws BeansException, InvocationTargetException, IllegalAccessException;
+    protected abstract Object createBean(String name, RootBeanDefinition beanDefinition) throws BeansException, Exception;
 
     protected abstract boolean containsBeanDefinition(String beanName);
 
@@ -77,7 +77,7 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry
 
 
     @Override
-    public <T> T getBean(String name, Class<T> requiredType) throws BeansException, InvocationTargetException, IllegalAccessException {
+    public <T> T getBean(String name, Class<T> requiredType) throws BeansException, Exception {
         return ((T) getBean(name));
     }
 
@@ -120,10 +120,12 @@ public abstract class AbstractBeanFactory extends DefaultSingletonBeanRegistry
         return result;
     }
 
+    @Override
     public ConversionService getConversionService() {
         return this.conversionService;
     }
 
+    @Override
     public void setConversionService(ConversionService conversionService) {
         this.conversionService = conversionService;
     }

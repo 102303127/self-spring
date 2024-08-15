@@ -3,6 +3,7 @@ package com.zhang.jdbc.core;
 import com.zhang.jdbc.JdbcException;
 import com.zhang.jdbc.datasource.DataSourceUtils;
 import com.zhang.jdbc.support.JdbcAccessor;
+import com.zhang.jdbc.support.JdbcUtils;
 import com.zhang.jdbc.support.KeyHolder;
 
 import javax.sql.DataSource;
@@ -94,9 +95,64 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
     }
 
 
-    @Override
-    public void execute(String sql) {
+    //-------------------------------------------------------------------------
+    // Methods dealing with static SQL (java.sql.Statement)
+    //-------------------------------------------------------------------------
+
+    private <T> T execute(StatementCallback<T> action, boolean closeResources) throws JdbcException, SQLException {
+
+        Connection con = DataSourceUtils.getConnection(obtainDataSource());
+        Statement stmt = null;
+        try {
+            stmt = con.createStatement();
+            applyStatementSettings(stmt);
+            return action.doInStatement(stmt);
+        }
+        catch (SQLException ex) {
+            // Release Connection early, to avoid potential connection pool deadlock
+            // in the case when the exception translator hasn't been initialized yet.
+            String sql = getSql(action);
+            JdbcUtils.closeStatement(stmt);
+            stmt = null;
+            DataSourceUtils.releaseConnection(con, getDataSource());
+            con = null;
+            throw new JdbcException("StatementCallback", sql, ex);
+        }
+        finally {
+            if (closeResources) {
+                JdbcUtils.closeStatement(stmt);
+                DataSourceUtils.releaseConnection(con, getDataSource());
+            }
+        }
     }
+
+    @Override
+    public <T> T execute(StatementCallback<T> action) throws SQLException {
+        return execute(action, true);
+    }
+
+    @Override
+    public void execute(final String sql) throws SQLException {
+
+        /**
+         * Callback to execute the statement.
+         */
+        class ExecuteStatementCallback implements StatementCallback<Object>, SqlProvider {
+            @Override
+            public Object doInStatement(Statement stmt) throws SQLException {
+                stmt.execute(sql);
+                return null;
+            }
+            @Override
+            public String getSql() {
+                return sql;
+            }
+        }
+
+        execute(new ExecuteStatementCallback(), true);
+    }
+
+
 
     @Override
     public int update(String sql) {
@@ -135,6 +191,10 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
         });
     }
 
+
+
+
+
     protected Connection createConnectionProxy(Connection con) {
         return null;
     }
@@ -160,7 +220,14 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
         DataSourceUtils.applyTimeout(stmt, getDataSource(), getQueryTimeout());
     }
 
-
+    private static String getSql(Object sqlProvider) {
+        if (sqlProvider instanceof SqlProvider) {
+            return ((SqlProvider) sqlProvider).getSql();
+        }
+        else {
+            return null;
+        }
+    }
 
     public int getFetchSize() {
         return fetchSize;

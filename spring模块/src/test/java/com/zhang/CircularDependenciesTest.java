@@ -1,10 +1,13 @@
-package com.zhang.context;
+package com.zhang;
 
 import com.zhang.beans.*;
+import com.zhang.context.ApplicationContext;
 import com.zhang.context.support.ClassPathXmlApplicationContext;
 import org.junit.Test;
 
 /**
+ * 循环依赖的测试
+ *
  * @author zhang
  * @date 2024/8/6
  * @Description

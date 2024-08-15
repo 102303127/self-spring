@@ -1,0 +1,54 @@
+├─beans
+│  │  BeansException.java
+│  │  PropertyValue.java                          ## bean属性信息
+│  │  PropertyValues.java                         ## 用于保存单个 Bean 属性的信息和值的对象。
+│  │
+│  ├─factory
+│  │  │  Aware.java                               ## 用于感知容器
+│  │  │  BeanFactory.java
+│  │  │  BeanFactoryAware.java
+│  │  │  BeanNameAware.java
+│  │  │  HierarchicalBeanFactory.java             ## beanFactory接口的扩展接口
+│  │  │  InitializingBean.java                    ## 为bean提供了属性初始化后的处理方法
+│  │  │  ListableBeanFactory.java                 ## beanFactory接口的扩展接口
+│  │  │  ObjectFactory.java                       ## 函数式接口，，对象的创建方式完全由调用方或者子类实现
+│  │  │  PropertyResourceConfigurer.java          ## 属性文件占位符替换
+│  │  │
+│  |  ├─annotation
+│  |  │      Autowired.java
+│     │      AutowiredAnnotationBeanPostProcessor.java      ## 对@Autowire和@Value注解进行处理
+│     │      Value.java
+│     │
+│  │  ├─config
+│  │  │      AutowireCapableBeanFactory.java
+│  │  │      BeanDefinition.java
+│  │  │      BeanFactoryPostProcessor.java
+│  │  │      BeanPostProcessor.java
+│  │  │      BeanReference.java                              ## 对 Bean 名称的逻辑引用(用在属性注入Bean里面)
+│  │  │      ConfigurableBeanFactory.java
+│  │  │      ConfigurableListableBeanFactory.java
+│  │  │      InstantiationAwareBeanPostProcessor.java
+│  │  │      SingletonBeanRegistry.java                      ## 单例Bean的注册创建接口
+│  │  │
+│  │  ├─support
+│  │  │  │  AbstractAutowireCapableBeanFactory.java          ## 创建并获取Bean的核心实现类
+│  │  │  │  AbstractBeanFactory.java                         ## ioc容器的抽象实现类
+│  │  │  │  DefaultListableBeanFactory.java                  ## BeanFactory的核心实现
+│  │  │  │
+│  │  │  ├─beanDefinition
+│  │  │  │      AbstractBeanDefinition.java                  ## BeanDefinition的核心实现类
+│  │  │  │      AbstractBeanDefinitionReader.java            ## BeanDefinitionRegistry接口，加载BeanDefinition的核心实现类
+│  │  │  │      BeanDefinitionReader.java                    ## 接口
+│  │  │  │      BeanDefinitionRegistry.java                  ## 接口
+│  │  │  │      DefaultSingletonBeanRegistry.java            ## 默认的SingletonBeanRegistry接口实现类，其中设置有三级缓存处理逻辑
+│  │  │  │      RootBeanDefinition.java
+│  │  │  │
+│  │  │  └─beanDefinitionInStantiationStrategy
+│  │  │          InstantiationStrategy.java
+│  │  │          SimpleInstantiationStrategy.java            ## 简单的实例化策略
+│  │  │
+│  │  └─xml
+|  |          BeanDefinitionDocumentReader.java              ## 解析xml
+│  |          DefaultBeanDefinitionDocumentReader.java       ## 解析xml的默认实现类
+│  │          XmlBeanDefinitionReader.java                   ## 解析xml中定义的Bean
+│  │

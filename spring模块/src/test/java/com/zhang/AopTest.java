@@ -1,8 +1,9 @@
-package com.zhang.aop;
+package com.zhang;
 
 import com.zhang.beans.BeansException;
 import com.zhang.context.ApplicationContext;
 import com.zhang.context.support.ClassPathXmlApplicationContext;
+import com.zhang.service.AopTestService;
 import org.junit.Test;
 
 /**

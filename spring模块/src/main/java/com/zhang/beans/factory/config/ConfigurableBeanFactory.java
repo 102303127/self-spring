@@ -1,6 +1,7 @@
 package com.zhang.beans.factory.config;
 
 import com.zhang.beans.factory.HierarchicalBeanFactory;
+import com.zhang.core.convert.ConversionService;
 import com.zhang.util.StringValueResolver;
 
 /**
@@ -47,9 +48,9 @@ public interface ConfigurableBeanFactory extends HierarchicalBeanFactory, Single
 
 
 
-    //void setConversionService(ConversionService conversionService);
+    void setConversionService(ConversionService conversionService);
 
-    //ConversionService getConversionService();
+    ConversionService getConversionService();
 
 
 

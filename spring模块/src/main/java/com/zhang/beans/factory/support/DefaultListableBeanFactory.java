@@ -55,10 +55,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
     }
 
     @Override
-    public <T> T getBean(Class<T> requiredType) throws BeansException, InvocationTargetException, IllegalAccessException {
+    public <T> T getBean(Class<T> requiredType) throws BeansException, Exception {
         List<String> beanNames = new ArrayList<>();
         for (Map.Entry<String, BeanDefinition> entry : beanDefinitionMap.entrySet()) {
-            Class beanClass = entry.getValue().getClass();
+            Class beanClass = entry.getValue().getBeanClass();
             if (requiredType.isAssignableFrom(beanClass)) {
                 beanNames.add(entry.getKey());
             }
@@ -88,7 +88,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
                     T bean = type.cast(getBean(beanName));
                     result.put(beanName, bean);
                 }
-            } catch (BeansException | InvocationTargetException | IllegalAccessException e) {
+            } catch (BeansException | Exception e) {
                 throw new RuntimeException("Error getting bean for name: " + beanName, e);
             }
         });
@@ -109,7 +109,7 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
             if (beanDefinition.isSingleton() && !beanDefinition.isLazyInit()) {
                 try {
                     getBean(beanName);
-                } catch (BeansException | InvocationTargetException | IllegalAccessException e) {
+                } catch (BeansException | Exception e) {
                     throw new RuntimeException(e);
                 }
             }

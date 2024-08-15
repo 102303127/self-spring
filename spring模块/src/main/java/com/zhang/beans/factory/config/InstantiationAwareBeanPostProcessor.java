@@ -19,7 +19,9 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor{
      * @return
      * @throws BeansException
      */
-    Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException;
+    default Object postProcessBeforeInstantiation(Class<?> beanClass, String beanName) throws BeansException{
+        return null;
+    }
 
     /**
      * 在Bean的实例化完成之后执行
@@ -29,7 +31,9 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor{
      * @return
      * @throws BeansException
      */
-    boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException;
+    default boolean postProcessAfterInstantiation(Object bean, String beanName) throws BeansException{
+        return true;
+    }
 
     /**
      * 对属性值进行修改，
@@ -42,8 +46,25 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor{
      * @return
      * @throws BeansException
      */
-    PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName)
-            throws BeansException;
+    default PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName)
+            throws BeansException{
+        return pvs;
+    }
+
+
+    /**
+     * bean实例化之后，设置属性之前执行
+     *
+     * @param pvs
+     * @param bean
+     * @param beanName
+     * @return
+     * @throws BeansException
+     */
+    default PropertyValues postProcessPropertyValues(PropertyValues pvs, Object bean, String beanName)
+            throws BeansException, Exception{
+        return pvs;
+    }
 
 
     /**
@@ -55,5 +76,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor{
      * @return
      * @throws BeansException
      */
-    Object getEarlyBeanReference(Object bean, String beanName) throws BeansException;
+    default Object getEarlyBeanReference(Object bean, String beanName) throws BeansException{
+        return bean;
+    }
 }

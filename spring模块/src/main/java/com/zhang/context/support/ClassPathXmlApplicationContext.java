@@ -16,11 +16,11 @@ public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContex
     public ClassPathXmlApplicationContext() {
     }
 
-    public ClassPathXmlApplicationContext(String configLocation) throws BeansException {
+    public ClassPathXmlApplicationContext(String configLocation) throws BeansException, Exception {
         this(new String[] {configLocation});
     }
 
-    public ClassPathXmlApplicationContext(String[] configLocations) throws BeansException {
+    public ClassPathXmlApplicationContext(String[] configLocations) throws BeansException, Exception {
         this.configLocations = configLocations;
         refresh();
     }

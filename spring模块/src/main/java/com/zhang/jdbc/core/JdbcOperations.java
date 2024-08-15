@@ -16,11 +16,13 @@ public interface JdbcOperations {
 
     <T> T execute(PreparedStatementCreator psc, PreparedStatementCallback<T> action) throws SQLException;
 
+    <T> T execute(StatementCallback<T> action) throws  SQLException;
+
     /**
      *
      * @param sql
      */
-    void execute(String sql);
+    void execute(String sql) throws SQLException;
 
 
     /**

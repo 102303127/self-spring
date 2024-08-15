@@ -1,5 +1,7 @@
 package com.zhang.beans;
 
+import com.zhang.stereotype.Component;
+
 /**
  * @author zhang
  * @date 2024/8/6
@@ -27,4 +29,11 @@ public class Clothes {
         this.color = color;
     }
 
+
+    @Override
+    public String toString() {
+        return "Clothes{" +
+                "color='" + color + '\'' +
+                '}';
+    }
 }

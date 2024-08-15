@@ -9,6 +9,7 @@ import com.zhang.beans.PropertyValues;
  */
 public class RootBeanDefinition extends AbstractBeanDefinition{
 
+
     public RootBeanDefinition(Class beanClass) {
         super(beanClass);
     }

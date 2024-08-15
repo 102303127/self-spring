@@ -81,10 +81,7 @@ public abstract class AbstractAutoProxyCreator implements InstantiationAwareBean
         return false;
     }
 
-    @Override
-    public PropertyValues postProcessProperties(PropertyValues pvs, Object bean, String beanName) {
-        return null;
-    }
+
 
     /**
      * 根据需要包装给定的bean，如果bean满足AOP切点条件，则返回代理对象，否则返回原bean。

@@ -42,7 +42,29 @@ public class PropertyResourceConfigurer implements BeanFactoryPostProcessor {
     /** 默认值分隔符: {@value}. */
     public static final String DEFAULT_VALUE_SEPARATOR = ":";
 
+
+
     private String location;
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    /**
+     *  {@value #DEFAULT_PLACEHOLDER_PREFIX}
+     */
+    protected String placeholderPrefix = DEFAULT_PLACEHOLDER_PREFIX;
+
+    /**
+     * {@value #DEFAULT_PLACEHOLDER_SUFFIX}.
+     */
+    protected String placeholderSuffix = DEFAULT_PLACEHOLDER_SUFFIX;
+
+    /**
+     * {@value #DEFAULT_VALUE_SEPARATOR}.
+     */
+    protected String valueSeparator = DEFAULT_VALUE_SEPARATOR;
+
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         //加载属性配置文件
@@ -116,13 +138,18 @@ public class PropertyResourceConfigurer implements BeanFactoryPostProcessor {
 
     /**
      * 解析占位符
-     * @param strVal
-     * @param properties
-     * @return
      */
-    private String resolvePlaceholder(String strVal, Properties properties) {
-        StringBuffer stringBuffer = new StringBuffer(strVal);
-        return stringBuffer.toString();
+    private String resolvePlaceholder(String value, Properties properties) {
+        String strVal = value;
+        StringBuffer buf = new StringBuffer(strVal);
+        int startIndex = strVal.indexOf(placeholderPrefix);
+        int endIndex = strVal.indexOf(placeholderSuffix);
+        if (startIndex != -1 && endIndex != -1 && startIndex < endIndex) {
+            String propKey = strVal.substring(startIndex + 2, endIndex);
+            String propVal = properties.getProperty(propKey);
+            buf.replace(startIndex, endIndex + 1, propVal);
+        }
+        return buf.toString();
     }
 
 

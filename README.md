@@ -2,22 +2,31 @@
 
 该项目用于自我学习过程中的实践
 
-[spring项目结构](spring模块/src/main/java/com/zhang/tr.txt)
+[spring-aop项目结构](spring模块/src/main/java/com/zhang/aop-tree.txt)
+
+[spring-bean项目结构](spring模块/src/main/java/com/zhang/bean-tree.txt)
+
+[spring-context项目结构](spring模块/src/main/java/com/zhang/context-tree.txt)
 
 [springmvc项目结构](springmvc模块/src/main/java/com/zhang/web/tr.txt)
 
 - 飞书文档：https://zquk8ow8fg6.feishu.cn/wiki/ActQw0AK7iPvvvkPkhlcpCIjnRh?from=from_copylink
 
-其中分为spring模块和springmvc模块
+## 项目介绍
+项目分为spring模块和springmvc模块
+### spring模块
 
-spring模块只实现了xml注册Bean的部分
-
-springmvc模块依赖于org.springframework中的spring的ioc和web模块
+包括ioc模块，aop模块，jdbc模块(没有完善)
+实现了xml注册Bean的部分，注解和xml上逻辑大体相同（时间不太够用就简单实现注解的）
 
 - xml依赖于XmlBeanDefinitionReader实现注册Bean
 
-- 注解主要依赖于ClassPathBeanDefinitionScanner实现扫描注册Bean
+- 注解主要依赖于ClassPathBeanDefinitionScanner实现扫描注册Bean(没有实现)
 
+### springmvc模块
+
+  由于自己实现的ioc没有实现注解，mvc模块依赖于org.springframework中的spring的ioc和web模块
+- springmvc-starter
 
 
 ## Ioc模块
@@ -33,16 +42,41 @@ springmvc模块依赖于org.springframework中的spring的ioc和web模块
 
 
 
-在对Bean的属性填充populateBean()
-循环依赖的解决：三级缓存
-在DefaultSingletonBeanRegistry设置有三个map用于实现三级缓存，解决循环依赖问题
-- singletonObjects         第一级缓存，用于保存实例化、注入、初始化完成的bean实例
-- earlySingletonObjects  第二级缓存，存放原始的 bean 对象（尚未填充属性），用于解决循环依赖
-- singletonFactories       第三级缓存，用于保存bean创建工厂，以便于后面扩展有机会创建代理对象。
-其中第三级缓存中添加ObjectFactory对象，对象可能需要经过Aop，通过getEarlyBeanReference方法获取代理对象
-如果不实现Aop功能，二级缓存是足够解决循环依赖的
+### 3.部分原理
+#### 1. 解决循环依赖
 
+   在对Bean的属性填充populateBean()
 
+   循环依赖的解决：三级缓存
+
+    在DefaultSingletonBeanRegistry设置有三个map用于实现三级缓存，解决循环依赖问题
+   - singletonObjects         第一级缓存，用于保存实例化、注入、初始化完成的bean实例
+   - earlySingletonObjects  第二级缓存，存放原始的 bean 对象（尚未填充属性），用于解决循环依赖
+   - singletonFactories       第三级缓存，用于保存bean创建工厂，以便于后面扩展有机会创建代理对象。
+
+   其中第三级缓存中添加ObjectFactory对象，对象可能需要经过Aop，通过getEarlyBeanReference方法获取代理对象
+   如果不实现Aop功能，二级缓存是足够解决循环依赖的
+#### 2. 解析xml文件
+- spring 源码中解析xml是实现了BeanDefinitionDocumentReader接口的默认实现类
+  可以通过parseBeanDefinitionElement方法解析单个bean标签，
+  也可以通过parseBeanDefinitions方法解析多个bean标签
+- 这里简化实现，所有解析均在DefaultBeanDefinitionDocumentReader(BeanDefinitionDocumentReader的默认实现类)中实现。
+#### 3. 解析占位符
+- 用PropertyResourceConfigurer实现对@Value注解的解析填充
+  该类实现方法已弃用
+  新版本使用 org.springframework.context.support.PropertySourcesPlaceholderConfigurer ，
+  通过利用 org.springframework.core.env.Environment
+  AND org.springframework.core.env.PropertySource
+  机制来更灵活。
+#### 4. 包扫描
+- 通过扫描指定包，把带有@Component注解的类注册到ioc中作为Bean
+  ClassPathBeanDefinitionScanner #doScan----->
+  ClassPathScanningCandidateComponentProvider #findCandidateComponents         ##查找指定基础包路径下带有Component注解的类
+#### 5. Bean 的生命周期
+   - 时序图中也有流程
+   
+![img.png](spring模块/png/img.png)
+   
 
 
 

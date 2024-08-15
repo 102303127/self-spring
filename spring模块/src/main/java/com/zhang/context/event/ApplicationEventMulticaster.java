@@ -1,6 +1,8 @@
 package com.zhang.context.event;
 
+import com.zhang.beans.BeansException;
 import com.zhang.context.ApplicationEvent;
+import com.zhang.context.ApplicationListener;
 
 /**
  * @author zhang
@@ -9,5 +11,9 @@ import com.zhang.context.ApplicationEvent;
  */
 public interface ApplicationEventMulticaster {
 
-    void multicastEvent(ApplicationEvent event);
+    void addApplicationListener(ApplicationListener<?> listener);
+
+    void removeApplicationListener(ApplicationListener<?> listener);
+
+    void multicastEvent(ApplicationEvent event) throws BeansException;
 }

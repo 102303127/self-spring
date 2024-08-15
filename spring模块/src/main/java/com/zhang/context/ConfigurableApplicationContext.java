@@ -15,8 +15,19 @@ public interface ConfigurableApplicationContext extends ApplicationContext{
      *
      * @throws BeansException
      */
-    void refresh() throws BeansException;
+    void refresh() throws BeansException, Exception;
 
 
     ConfigurableListableBeanFactory getBeanFactory();
+
+
+    /**
+     * 添加应用程序监听器。
+     *
+     * @param listener 要添加的应用程序监听器
+     */
+    void addApplicationListener(ApplicationListener<?> listener);
+
+
+
 }
