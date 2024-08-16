@@ -70,8 +70,12 @@
   机制来更灵活。
 #### 4. 包扫描
 - 通过扫描指定包，把带有@Component注解的类注册到ioc中作为Bean
+
+  
   ClassPathBeanDefinitionScanner #doScan----->
+  
   ClassPathScanningCandidateComponentProvider #findCandidateComponents         ##查找指定基础包路径下带有Component注解的类
+  
 #### 5. Bean 的生命周期
    - 时序图中也有流程
    
