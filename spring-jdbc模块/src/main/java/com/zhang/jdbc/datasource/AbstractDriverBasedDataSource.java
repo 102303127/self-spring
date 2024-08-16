@@ -17,7 +17,6 @@ public abstract class AbstractDriverBasedDataSource implements DataSource {
 
 	private String password;
 
-
 	private String catalog;
 
 	private String schema;

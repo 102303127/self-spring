@@ -8,6 +8,7 @@ import java.sql.SQLException;
  * @Description
  */
 public class JdbcException extends RuntimeException{
+
     public JdbcException(String message) {
         super(message);
     }

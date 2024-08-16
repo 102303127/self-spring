@@ -1,6 +1,8 @@
 package com.zhang.jdbc.datasource;
 
+
 import com.zhang.jdbc.JdbcException;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -52,6 +54,14 @@ public abstract class DataSourceUtils {
 
     //==================设置超时时间==================
     public static void applyTimeout(Statement stmt, DataSource dataSource, int timeout) throws SQLException {
-        stmt.setQueryTimeout(timeout);
+        ConnectionHolder holder = null;
+        if (dataSource != null) {
+            holder = (ConnectionHolder)TransactionSynchronizationManager.getResource(dataSource);
+        }
+        if (holder != null && holder.hasTimeout()) {
+            stmt.setQueryTimeout(holder.getTimeToLiveInSeconds());
+        } else if (timeout >= 0) {
+            stmt.setQueryTimeout(timeout);
+        }
     }
 }

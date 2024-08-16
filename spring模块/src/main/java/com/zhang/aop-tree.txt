@@ -2,10 +2,10 @@
 │  tr.txt
 │  
 ├─aop
-│  │  Advisor.java
-│  │  AdvisorChainFactory.java                     ##
+│  │  Advisor.java                                 ## Advisor是Pointcut和Advice的组合
+│  │  AdvisorChainFactory.java                     ## 获取拦截器和动态拦截建议接口
 │  │  ClassFilter.java
-│  │  DefaultAdvisorChainFactory.java              ##
+│  │  DefaultAdvisorChainFactory.java              ## AdvisorChainFactory的默认实现类
 │  │  Pointcut.java                                ## 切点
 │  │  PointcutAdvisor.java
 │  │  ReflectiveMethodInvocation.java              ## 反射式方法调用，主要用来调用拦截器
@@ -43,4 +43,3 @@
 │  └─target
 │          MethodMatcher.java                      ## 判断方法是否符合定义的切入点（pointcut）的条件
 │          TargetSource.java                       ## 被代理的目标对象
-│          

@@ -13,43 +13,23 @@ import java.util.logging.Logger;
 
 public class DriverManagerDataSource extends AbstractDriverBasedDataSource {
 
-	/**
-	 * Constructor for bean-style configuration.
-	 */
+
 	public DriverManagerDataSource() {
 	}
 
-	/**
-	 * Create a new DriverManagerDataSource with the given JDBC URL,
-	 * not specifying a username or password for JDBC access.
-	 * @param url the JDBC URL to use for accessing the DriverManager
-	 * @see java.sql.DriverManager#getConnection(String)
-	 */
+
 	public DriverManagerDataSource(String url) {
 		setUrl(url);
 	}
 
-	/**
-	 * Create a new DriverManagerDataSource with the given standard
-	 * DriverManager parameters.
-	 * @param url the JDBC URL to use for accessing the DriverManager
-	 * @param username the JDBC username to use for accessing the DriverManager
-	 * @param password the JDBC password to use for accessing the DriverManager
-	 * @see java.sql.DriverManager#getConnection(String, String, String)
-	 */
+
 	public DriverManagerDataSource(String url, String username, String password) {
 		setUrl(url);
 		setUsername(username);
 		setPassword(password);
 	}
 
-	/**
-	 * Create a new DriverManagerDataSource with the given JDBC URL,
-	 * not specifying a username or password for JDBC access.
-	 * @param url the JDBC URL to use for accessing the DriverManager
-	 * @param conProps the JDBC connection properties
-	 * @see java.sql.DriverManager#getConnection(String)
-	 */
+
 	public DriverManagerDataSource(String url, Properties conProps) {
 		setUrl(url);
 		setConnectionProperties(conProps);

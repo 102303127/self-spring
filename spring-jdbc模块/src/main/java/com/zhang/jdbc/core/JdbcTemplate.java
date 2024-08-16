@@ -5,6 +5,9 @@ import com.zhang.jdbc.datasource.DataSourceUtils;
 import com.zhang.jdbc.support.JdbcAccessor;
 import com.zhang.jdbc.support.JdbcUtils;
 import com.zhang.jdbc.support.KeyHolder;
+import org.springframework.dao.DataAccessException;
+import org.springframework.lang.Nullable;
+import org.springframework.util.Assert;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -103,10 +106,14 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
 
         Connection con = DataSourceUtils.getConnection(obtainDataSource());
         Statement stmt = null;
+
+        Object var12;
         try {
             stmt = con.createStatement();
             applyStatementSettings(stmt);
-            return action.doInStatement(stmt);
+            T result = action.doInStatement(stmt);
+
+            var12 = result;
         }
         catch (SQLException ex) {
             // Release Connection early, to avoid potential connection pool deadlock
@@ -124,6 +131,8 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
                 DataSourceUtils.releaseConnection(con, getDataSource());
             }
         }
+
+        return (T) var12;
     }
 
     @Override
@@ -153,6 +162,44 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
     }
 
 
+    public <T> T query(final String sql, final ResultSetExtractor<T> rse) throws DataAccessException, SQLException {
+
+        class QueryStatementCallback implements StatementCallback<T>, SqlProvider {
+            QueryStatementCallback() {
+            }
+
+            @Nullable
+            public T doInStatement(Statement stmt) throws SQLException {
+                ResultSet rs = null;
+
+                Object var3;
+                try {
+                    rs = stmt.executeQuery(sql);
+                    var3 = rse.extractData(rs);
+                } finally {
+                    JdbcUtils.closeResultSet(rs);
+                }
+
+                return (T) var3;
+            }
+
+            public String getSql() {
+                return sql;
+            }
+        }
+
+        return this.execute(new QueryStatementCallback(), true);
+    }
+
+
+    public void query(String sql, RowCallbackHandler rch) throws DataAccessException, SQLException {
+        this.query((String)sql, (ResultSetExtractor)(new RowCallbackHandlerResultSetExtractor(rch)));
+    }
+
+
+    public <T> List<T> query(String sql, RowMapper<T> rowMapper) throws DataAccessException, SQLException {
+        return (List)this.query((String)sql, (ResultSetExtractor)(new RowMapperResultSetExtractor(rowMapper)));
+    }
 
     @Override
     public int update(String sql) {
@@ -179,12 +226,12 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
             ResultSet keys = ps.getGeneratedKeys();
             if (keys != null) {
                 try {
-                    /* TODO RowMapperResultSetExtractor<Map<String, Object>> rse =
+                      RowMapperResultSetExtractor<Map<String, Object>> rse =
                             new RowMapperResultSetExtractor<>(getColumnMapRowMapper(), 1);
-                   generatedKeys.addAll(result(rse.extractData(keys)));
-                */}
+                      generatedKeys.addAll(rse.extractData(keys));
+                }
                 finally {
-    //  TODo              JdbcUtils.closeResultSet(keys);
+                  JdbcUtils.closeResultSet(keys);
                 }
             }
             return rows;
@@ -251,5 +298,33 @@ public class JdbcTemplate extends JdbcAccessor implements JdbcOperations{
 
     public void setQueryTimeout(int queryTimeout) {
         this.queryTimeout = queryTimeout;
+    }
+
+
+    protected RowMapper<Map<String, Object>> getColumnMapRowMapper() {
+        return new ColumnMapRowMapper();
+    }
+
+
+
+
+
+
+
+
+    private static class RowCallbackHandlerResultSetExtractor implements ResultSetExtractor<Object> {
+        private final RowCallbackHandler rch;
+
+        public RowCallbackHandlerResultSetExtractor(RowCallbackHandler rch) {
+            this.rch = rch;
+        }
+
+        public Object extractData(ResultSet rs) throws SQLException {
+            while(rs.next()) {
+                this.rch.processRow(rs);
+            }
+
+            return null;
+        }
     }
 }
