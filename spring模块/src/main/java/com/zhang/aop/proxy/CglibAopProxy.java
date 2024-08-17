@@ -37,7 +37,10 @@ public class CglibAopProxy implements AopProxy {
 	}
 
 	/**
-	 * 注意此处的MethodInterceptor是cglib中的接口，advised中的MethodInterceptor的AOP联盟中定义的接口，因此定义此类做适配
+	 * 注意此处的MethodInterceptor是cglib中的接口，
+	 * advised中的MethodInterceptor的AOP联盟中定义的接口，
+	 * 因此定义此类做适配
+	 *
 	 */
 	private static class DynamicAdvisedInterceptor implements MethodInterceptor {
 

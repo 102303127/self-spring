@@ -70,12 +70,8 @@
   机制来更灵活。
 #### 4. 包扫描
 - 通过扫描指定包，把带有@Component注解的类注册到ioc中作为Bean
-
-  
   ClassPathBeanDefinitionScanner #doScan----->
-  
   ClassPathScanningCandidateComponentProvider #findCandidateComponents         ##查找指定基础包路径下带有Component注解的类
-  
 #### 5. Bean 的生命周期
    - 时序图中也有流程
    
@@ -89,6 +85,49 @@
 Aop代理注册流程
 
 ![img.png](spring模块/png/Aop创建代理流程时序图.png)
+
+## 3.部分原理
+
+1. ### 把代理对象到ioc容器
+
+> 容器在初始化过程中会**预先实例化**单例Bean,调用getBean()
+
+- 在Spring Ioc完成代理对象target的实例化、填充、初始化。然后在**初始化后置处理器**中进行介入，通过BeanPostProcess会判断是否需要增强(Aop代理对象)
+
+1. ### 调用方法wrapIfNecessary
+
+> 通过后置处理器进入AbstractAutoProxyCreator中调用wrapIfNecessary
+
+- 1.判断是不是基础设施类（如Advice、Pointcut等），如果是直接返回Bean
+- 2.而后通过getAdvicesAndAdvisorsForBean()方法获取bean的所有Advisor，其中重要的方法**findCandidateAdvisors()**   遍历容器中的Advisor获取所有切面，判断是否匹配细节交给AopUtil实现
+- 3.找到所有Advisor之后就开始着手创建代理(createProxy),根据需要通过proxyFactory.**getProxy()**创建对应的代理，赋予target等属性
+
+1. ### 代理调用过程
+
+- 在调用target目标方法时，首先进入DynamicAdvisedInterceptor#intercept
+  - 通过调用DefaultAdvisorChainFactory#**getInterceptorsAndDynamicInterceptionAdvice**获取与指定配置、方法和目标类相关的拦截器和动态拦截建议，最终返回**拦截器列表。**
+  - 如果拦截器链不为空，则调用proceed()，依次执行拦截器链中的拦截器(这一步执行通知Advice)或执行目标方法
+
+1. ### 核心类
+
+- AspectJExpressionPointcut
+  - *AspectJ切点，实现*Pointcut, ClassFilter, MethodMatcher*接口*
+  - 判断给定的类是否与切点表达式匹配。
+  - 用于根据 AspectJ 切点表达式创建一个新的 AspectJExpressionPointcut 实例。
+- AspectJExpressionPointcutAdvisor
+  - Advisor是Pointcut和Advice的组合
+  - 专门处理基于AspectJ的通知+切点的
+- AbstractAutoProxyCreator
+  - Aop创建动态代理的入口及主要执行
+  - 根据需要包装给定的bean，如果bean满足AOP切点条件，则返回代理对象，否则返回原bean。
+  - 默认子类DefaultAdvisorAutoProxyCreator用于实现模板方法getAdvicesAndAdvisorsForBean()，获取所有适用于当前Bean 的 Advisors
+- DefaultAdvisorChainFactory
+  - 实现AdvisorChainFactory接口
+  - 通过方法getInterceptorsAndDynamicInterceptionAdvice(),获取与指定配置、方法和目标类相关的拦截器和动态拦截建议。
+- MethodInterceptor(org.aopalliance.intercept.MethodInterceptor)
+  - 主要实现了两个方法拦截器
+  - AfterReturningAdviceInterceptor#invoke()
+  - MethodBeforeAdviceInterceptor#invoke()
 
 ## Jdbc模块
 
@@ -157,8 +196,42 @@ spring在启动的时候会初始化AbstractHandlerMethodMapping类，他实现�
 
 
 
+# 五.webmvc-starter
 
+1. ## 项目结构
 
+```Plain
+└─main
+    ├─java
+    │  └─com
+    │      └─zhang
+    │              MvcAutoConfiguration.java         ## 自动装配类
+    │              
+    └─resources
+        └─META-INF
+                spring.factories                          
+```
+
+2. ## 依赖
+```XML
+<dependencies>
+
+    <!-- 用来打包starter -->
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+
+    <!-- 手写springmvc -->
+    <dependency>
+        <groupId>com.zhang</groupId>
+        <artifactId>springmvc-07-27</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+
+</dependencies>
+
+````
 
 
 

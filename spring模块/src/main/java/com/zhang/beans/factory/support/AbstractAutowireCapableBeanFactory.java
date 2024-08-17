@@ -257,13 +257,6 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
     }
 
 
-
-
-
-    protected Object createBeanInstance(RootBeanDefinition beanDefinition) throws BeansException {
-        return instantiationStrategy.instantiate(beanDefinition);
-    }
-
     /**
      * 填充Bean
      * @param beanName
@@ -326,5 +319,7 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
         }
     }
 
-
+    protected Object createBeanInstance(RootBeanDefinition beanDefinition) throws BeansException {
+        return instantiationStrategy.instantiate(beanDefinition);
+    }
 }
