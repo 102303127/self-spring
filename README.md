@@ -82,11 +82,11 @@
 
 ## Aop模块
 
-Aop代理注册流程
+## 1.Aop代理注册流程
 
 ![img.png](spring模块/png/Aop创建代理流程时序图.png)
 
-## 3.部分原理
+## 2.部分原理
 
 1. ### 把代理对象到ioc容器
 
@@ -94,7 +94,7 @@ Aop代理注册流程
 
 - 在Spring Ioc完成代理对象target的实例化、填充、初始化。然后在**初始化后置处理器**中进行介入，通过BeanPostProcess会判断是否需要增强(Aop代理对象)
 
-1. ### 调用方法wrapIfNecessary
+2. ### 调用方法wrapIfNecessary
 
 > 通过后置处理器进入AbstractAutoProxyCreator中调用wrapIfNecessary
 
@@ -102,13 +102,13 @@ Aop代理注册流程
 - 2.而后通过getAdvicesAndAdvisorsForBean()方法获取bean的所有Advisor，其中重要的方法**findCandidateAdvisors()**   遍历容器中的Advisor获取所有切面，判断是否匹配细节交给AopUtil实现
 - 3.找到所有Advisor之后就开始着手创建代理(createProxy),根据需要通过proxyFactory.**getProxy()**创建对应的代理，赋予target等属性
 
-1. ### 代理调用过程
+3. ### 代理调用过程
 
 - 在调用target目标方法时，首先进入DynamicAdvisedInterceptor#intercept
   - 通过调用DefaultAdvisorChainFactory#**getInterceptorsAndDynamicInterceptionAdvice**获取与指定配置、方法和目标类相关的拦截器和动态拦截建议，最终返回**拦截器列表。**
   - 如果拦截器链不为空，则调用proceed()，依次执行拦截器链中的拦截器(这一步执行通知Advice)或执行目标方法
 
-1. ### 核心类
+4. ### 核心类
 
 - AspectJExpressionPointcut
   - *AspectJ切点，实现*Pointcut, ClassFilter, MethodMatcher*接口*
