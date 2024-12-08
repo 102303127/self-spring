@@ -222,7 +222,7 @@ spring在启动的时候会初始化AbstractHandlerMethodMapping类，他实现�
         <artifactId>spring-boot-starter</artifactId>
     </dependency>
 
-    <!-- 手写springmvc -->
+    <!-- 手写springmvc依赖 -->
     <dependency>
         <groupId>com.zhang</groupId>
         <artifactId>springmvc-07-27</artifactId>
